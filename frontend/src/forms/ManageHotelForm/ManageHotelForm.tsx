@@ -15,7 +15,7 @@ export type HotelFormData = {
   starRating: number;
   facilities: string[];
   imageFiles: FileList;
-  //imageUrls: string[];
+  imageUrls: string[];
   adultCount: number;
   childCount: number;
 };
