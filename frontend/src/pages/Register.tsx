@@ -1,6 +1,7 @@
+
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
-import * as apiClient from '../api-clients';
+import * as apiClient from "../api-client";
 import { useAppContext } from "../contexts/AppContext";
 import { useNavigate } from "react-router-dom";
 
@@ -13,9 +14,9 @@ export type RegisterFormData = {
 };
 
 const Register = () => {
-  const queryClient= useQueryClient();
-  const navigate=useNavigate();
-  const {showToast}=useAppContext();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const { showToast } = useAppContext();
 
   const {
     register,
@@ -24,14 +25,14 @@ const Register = () => {
     formState: { errors },
   } = useForm<RegisterFormData>();
 
-  const mutation=useMutation(apiClient.register,{
-    onSuccess:async()=>{
-        showToast({message:"Registration Sucessful!!",type:"SUCCESS"});
-        await queryClient.invalidateQueries("validateToken");
-        navigate("/");
+  const mutation = useMutation(apiClient.register, {
+    onSuccess: async () => {
+      showToast({ message: "Registration Success!", type: "SUCCESS" });
+      await queryClient.invalidateQueries("validateToken");
+      navigate("/");
     },
-    onError:(error:Error)=>{
-        showToast({message:error.message,type:"ERROR"});
+    onError: (error: Error) => {
+      showToast({ message: error.message, type: "ERROR" });
     },
   });
 
@@ -41,7 +42,7 @@ const Register = () => {
 
   return (
     <form className="flex flex-col gap-5" onSubmit={onSubmit}>
-      <h2 className="text-3xl font-bold">Create an account</h2>
+      <h2 className="text-3xl font-bold">Create an Account</h2>
       <div className="flex flex-col md:flex-row gap-5">
         <label className="text-gray-700 text-sm font-bold flex-1">
           First Name
@@ -59,7 +60,7 @@ const Register = () => {
             className="border rounded w-full py-1 px-2 font-normal"
             {...register("lastName", { required: "This field is required" })}
           ></input>
-           {errors.lastName && (
+          {errors.lastName && (
             <span className="text-red-500">{errors.lastName.message}</span>
           )}
         </label>
@@ -71,9 +72,9 @@ const Register = () => {
           className="border rounded w-full py-1 px-2 font-normal"
           {...register("email", { required: "This field is required" })}
         ></input>
-         {errors.email && (
-            <span className="text-red-500">{errors.email.message}</span>
-          )}
+        {errors.email && (
+          <span className="text-red-500">{errors.email.message}</span>
+        )}
       </label>
       <label className="text-gray-700 text-sm font-bold flex-1">
         Password
@@ -84,13 +85,13 @@ const Register = () => {
             required: "This field is required",
             minLength: {
               value: 6,
-              message: "password must be atleast 6 char",
+              message: "Password must be at least 6 characters",
             },
           })}
         ></input>
-         {errors.password && (
-            <span className="text-red-500">{errors.password.message}</span>
-          )}
+        {errors.password && (
+          <span className="text-red-500">{errors.password.message}</span>
+        )}
       </label>
       <label className="text-gray-700 text-sm font-bold flex-1">
         Confirm Password
@@ -100,16 +101,16 @@ const Register = () => {
           {...register("confirmPassword", {
             validate: (val) => {
               if (!val) {
-                return "this field is req";
+                return "This field is required";
               } else if (watch("password") !== val) {
-                return "password does not match";
+                return "Your passwords do no match";
               }
             },
           })}
         ></input>
-         {errors.confirmPassword && (
-            <span className="text-red-500">{errors.confirmPassword.message}</span>
-          )}
+        {errors.confirmPassword && (
+          <span className="text-red-500">{errors.confirmPassword.message}</span>
+        )}
       </label>
       <span>
         <button

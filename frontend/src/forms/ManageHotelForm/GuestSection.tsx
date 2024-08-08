@@ -48,4 +48,4 @@ const GuestsSection = () => {
   );
 };
 
-export default GuestsSection; 
+export default GuestsSection;

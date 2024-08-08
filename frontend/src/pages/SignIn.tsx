@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
-import * as apiClient from '../api-clients';
+import * as apiClient from "../api-client";
 import { useAppContext } from "../contexts/AppContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export type SignInFormData = {
   email: string;
@@ -10,31 +10,32 @@ export type SignInFormData = {
 };
 
 const SignIn = () => {
-    const {showToast}=useAppContext();
-    const navigate=useNavigate();
-    const queryClient=useQueryClient();
+  const { showToast } = useAppContext();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const location = useLocation();
+
   const {
     register,
     formState: { errors },
-    handleSubmit
+    handleSubmit,
   } = useForm<SignInFormData>();
 
-  const mutation=useMutation(apiClient.signIn,{
-    onSuccess:async()=>{
-        showToast({message:"sign in successful",type:"SUCCESS"});
-        await queryClient.invalidateQueries("validateToken");
-        navigate("/");
-    
+  const mutation = useMutation(apiClient.signIn, {
+    onSuccess: async () => {
+      showToast({ message: "Sign in Successful!", type: "SUCCESS" });
+      await queryClient.invalidateQueries("validateToken");
+      navigate(location.state?.from?.pathname || "/");
     },
-    onError:(error:Error)=>{
-        //show toats
-        showToast({message:error.message,type:"ERROR"});
+    onError: (error: Error) => {
+      showToast({ message: error.message, type: "ERROR" });
     },
   });
 
-  const onSubmit=handleSubmit((data)=>{
-    mutation.mutate(data)
-  })
+  const onSubmit = handleSubmit((data) => {
+    mutation.mutate(data);
+  });
 
   return (
     <form className="flex flex-col gap-5" onSubmit={onSubmit}>
@@ -59,7 +60,7 @@ const SignIn = () => {
             required: "This field is required",
             minLength: {
               value: 6,
-              message: "password must be atleast 6 char",
+              message: "Password must be at least 6 characters",
             },
           })}
         ></input>
@@ -69,10 +70,10 @@ const SignIn = () => {
       </label>
       <span className="flex items-center justify-between">
         <span className="text-sm">
-            Not Registered?{" "}
-             <Link className="underline" to="/register">
-                Create an account here
-            </Link>
+          Not Registered?{" "}
+          <Link className="underline" to="/register">
+            Create an account here
+          </Link>
         </span>
         <button
           type="submit"

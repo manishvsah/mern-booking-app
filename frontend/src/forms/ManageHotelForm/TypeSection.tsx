@@ -3,11 +3,12 @@ import { hotelTypes } from "../../config/hotel-options-config";
 import { HotelFormData } from "./ManageHotelForm";
 
 const TypeSection = () => {
-  const { register,
-        watch,
-        formState:{errors},
-     } = useFormContext<HotelFormData>();
-     
+  const {
+    register,
+    watch,
+    formState: { errors },
+  } = useFormContext<HotelFormData>();
+
   const typeWatch = watch("type");
 
   return (
